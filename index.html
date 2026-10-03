@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>VyksaCity</title>
+<link rel="icon" type="image/png" href="favicon.png" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+    <!-- ====== ШАПКА С МЕНЮ ====== -->
+    <header>
+        <div class="container header-flex">
+            <div class="logo">
+                <h1><img src="images/logo.png" alt="VyksaCity" class="logo-img" />VyksaCity</h1>
+                <span class="slogan"> </span>
+            </div>
+            <nav>
+                <a href="index.html" class="active">Главная</a>
+                <a href="#about" onclick="alert('Сайт был создан осенью 2026 года. Для того, чтобы велолюбители и спортсмены могли посмотреть, как провели лето на велосипеде другие люди')">О клубе</a>
+                <a href="#contacts" onclick="alert('Номер телефона разработчика сайта- +7 960 188 15 11; электронная почта vyksacity2009@mail.ru')">Контакты</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- ====== ГЛАВНЫЙ БЛОК ====== -->
+    <main>
+        <div class="container">
+            <h2 class="page-title">Все мои соревнования по маунтибайку за <span class="year-badge">2026 год</span></h2>
+
+            <!-- Список постов — будет заполнен из JavaScript -->
+            <div id="posts-list"></div>
+        </div>
+    </main>
+
+    <!-- ====== ПОДВАЛ ====== -->
+    <footer>
+        <div class="container">
+            <p>© 2026 Выкса Сити</p>
+        </div>
+    </footer>
+
+    <!-- ====== ПОДКЛЮЧАЕМ JS ====== -->
+    <script src="script.js"></script>
+</body>
+</html>
