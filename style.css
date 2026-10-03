@@ -335,4 +335,23 @@ footer {
     vertical-align: middle;   /* выровнять по центру строки */
     margin-right: -3px;        /* отступ от текста */
     border-radius: 8px;       /* закруглённые углы (по желанию) */
+} 
+/* ===== КНОПКА БОТА ВК ===== */
+.vk-btn {
+    display: inline-block;
+    background: #0077FF;          /* фирменный синий ВК */
+    color: #ffffff !important;
+    padding: 8px 16px;
+    border-radius: 8px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.3s;
+    border: none;
+}
+
+.vk-btn:hover {
+    background: #0066DD;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
 }
