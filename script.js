@@ -12,7 +12,8 @@ const postsData = [
         images: [
             "images/post1_1.jpg",
             "images/post1_2.jpg",
-            "images/post1_3.jpg"
+            "images/post1_3.jpg",
+            "images/post1_4.jpg"
         ],
 videos: [                          // ← ДОБАВЬТЕ ЭТУ СТРОКУ
         "videos/post1_video1.mp4",     // ← и список видео
