@@ -91,7 +91,8 @@ videos: [                          // ← ДОБАВЬТЕ ЭТУ СТРОКУ
             "images/post5_3.jpg",
 "images/post5_4.jpg",
 "images/post5_5.jpg",
-"images/post5_6.jpg"
+"images/post5_6.jpg",
+            "images/post5_7.jpg"
         ]
     },
 {
