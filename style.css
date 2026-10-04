@@ -26,7 +26,10 @@ header {
     box-shadow: 0 2px 8px rgba(0,0,0,0.05);
     position: sticky;
     top: 0;
-    z-index: 100;
+    z-index: 100; 
+    min-height: 70px;                 /* ← МИНИМАЛЬНАЯ ВЫСОТА ШАПКИ */
+    display: flex;
+    align-items: center;              /* ← ЦЕНТРИРУЕМ ПО ВЕРТИКАЛИ */
 }
 
 .header-flex {
