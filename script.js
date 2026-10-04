@@ -15,10 +15,7 @@ const postsData = [
             "images/post1_3.jpg",
             "images/post1_4.jpg"
         ],
-videos: [                          // ← ДОБАВЬТЕ ЭТУ СТРОКУ
-        "videos/post1_video1.mp4",     // ← и список видео
-        "videos/post1_video2.mp4"
-    ]
+
     },
     {
         id: 2,
@@ -32,10 +29,7 @@ videos: [                          // ← ДОБАВЬТЕ ЭТУ СТРОКУ
             "images/post2_2.jpg",
             "images/post2_3.jpg"
         ],
-videos: [                          // ← ДОБАВЬТЕ ЭТУ СТРОКУ
-        "videos/post2_video1.mp4",     // ← и список видео
-        "videos/post2_video2.mp4"
-    ]
+
 
     },
 {
