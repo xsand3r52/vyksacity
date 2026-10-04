@@ -330,7 +330,7 @@ footer {
 /* ===== ЛОГОТИП ===== */
 .logo-img {
     width: 90px;              /* ширина картинки */
-    height: 80px;             /* высота картинки */
+    height: 50px;             /* высота картинки */
     object-fit: contain;      /* не растягивать */
     vertical-align: middle;   /* выровнять по центру строки */
     margin-right: -3px;        /* отступ от текста */
