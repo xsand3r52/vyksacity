@@ -336,7 +336,7 @@ footer {
     height: 50px;             /* высота картинки */
     object-fit: contain;      /* не растягивать */
     vertical-align: middle;   /* выровнять по центру строки */
-    margin-right: 4px;        /* отступ от текста */
+    margin-right: 8px;        /* отступ от текста */
     border-radius: 8px;       /* закруглённые углы (по желанию) */
 } 
 /* ===== КНОПКА БОТА ВК ===== */
