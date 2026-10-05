@@ -217,7 +217,8 @@
                 }
 
                 const fileData = await fileRes.json();
-                const currentPosts = JSON.parse(atob(fileData.content));
+               const decoded = decodeURIComponent(escape(atob(fileData.content)));
+const currentPosts = JSON.parse(decoded);
 
                 // 2. Создаём новый пост
                 const newId = Math.max(...currentPosts.map(p => p.id), 0) + 1;
