@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Админка — Выкса Сити</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body {
+            font-family: 'Segoe UI', Tahoma, sans-serif;
+            background: #f7f5f5;
+            color: #1a1a1a;
+            padding: 20px;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 700px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            border-left: 5px solid #c62828;
+        }
+        h1 {
+            color: #4a1e1e;
+            margin-bottom: 8px;
+            font-size: 26px;
+        }
+        .subtitle {
+            color: #7a4a4a;
+            font-size: 14px;
+            margin-bottom: 25px;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 6px;
+            color: #2e1a1a;
+            font-size: 15px;
+        }
+        input, textarea {
+            width: 100%;
+            padding: 10px 14px;
+            margin-bottom: 18px;
+            border: 2px solid #efe6e6;
+            border-radius: 8px;
+            font-size: 15px;
+            font-family: inherit;
+            transition: 0.2s;
+        }
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #c62828;
+            background: #fef9f9;
+        }
+        textarea { resize: vertical; min-height: 80px; }
+        button {
+            background: #c62828;
+            color: #fff;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 16px;
+            transition: 0.2s;
+        }
+        button:hover {
+            background: #b71c1c;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(198,40,40,0.3);
+        }
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        #status {
+            margin-top: 20px;
+            padding: 14px 18px;
+            border-radius: 8px;
+            font-weight: 600;
+            display: none;
+        }
+        #status.success {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-left: 4px solid #2e7d32;
+            display: block;
+        }
+        #status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+            display: block;
+        }
+        #status.loading {
+            background: #fff8e1;
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+            display: block;
+        }
+        .hint {
+            font-size: 13px;
+            color: #999;
+            margin-top: -14px;
+            margin-bottom: 18px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-top: 20px;
+            color: #c62828;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .back-link:hover { text-decoration: underline; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>📝 Новый пост</h1>
+        <p class="subtitle">Заполните форму и нажмите «Опубликовать». Пост появится на сайте через 1–2 минуты.</p>
+
+        <label>Название поста</label>
+        <input type="text" id="title" placeholder="Например: Маунтинбайк в Коврове" required>
+
+        <label>Дата</label>
+        <input type="date" id="date" required>
+
+        <label>Превью (путь к фото)</label>
+        <input type="text" id="preview" placeholder="images/post10_preview.jpg">
+        <p class="hint">Это картинка, которая показывается на главной.</p>
+
+        <label>Краткое описание (для главной)</label>
+        <textarea id="preview_text" placeholder="🥇 или короткий текст" rows="2"></textarea>
+
+        <label>Полный текст поста</label>
+        <textarea id="full_text" placeholder="Полный текст, который увидят при открытии поста" rows="8"></textarea>
+
+        <label>Фотографии (через запятую)</label>
+        <input type="text" id="images" placeholder="images/post10_1.jpg, images/post10_2.jpg">
+        <p class="hint">Пути к фото через запятую.</p>
+
+        <label>Видео (через запятую, можно оставить пустым)</label>
+        <input type="text" id="videos" placeholder="videos/post10_video1.mp4">
+
+        <button onclick="publishPost()" id="publishBtn">🚀 Опубликовать</button>
+
+        <div id="status"></div>
+
+        <a href="index.html" class="back-link">← На главную</a>
+    </div>
+
+    <script>
+        // ============================================
+        // НАСТРОЙКИ
+        // ============================================
+        const REPO = 'xsand3r52/vyksacity';  // Ваш репозиторий
+        const TOKEN_KEY = 'gh_token_vyksacity';  // Ключ для localStorage
+
+        // ============================================
+        // ПОЛУЧАЕМ ТОКЕН
+        // ============================================
+        let token = localStorage.getItem(TOKEN_KEY);
+
+        if (!token) {
+            token = prompt('🔑 Введите ваш GitHub токен (один раз):');
+            if (token) {
+                localStorage.setItem(TOKEN_KEY, token);
+            } else {
+                alert('❌ Без токена публикация невозможна.');
+                window.location.href = 'index.html';
+            }
+        }
+
+        // ============================================
+        // ФУНКЦИЯ ПУБЛИКАЦИИ
+        // ============================================
+        async function publishPost() {
+            const btn = document.getElementById('publishBtn');
+            const status = document.getElementById('status');
+
+            // Собираем данные из формы
+            const title = document.getElementById('title').value.trim();
+            const date = document.getElementById('date').value.trim();
+            const preview = document.getElementById('preview').value.trim();
+            const preview_text = document.getElementById('preview_text').value.trim();
+            const full_text = document.getElementById('full_text').value.trim();
+            const imagesRaw = document.getElementById('images').value.trim();
+            const videosRaw = document.getElementById('videos').value.trim();
+
+            // Проверка
+            if (!title || !date || !full_text) {
+                showStatus('❌ Заполните обязательные поля: название, дата, полный текст.', 'error');
+                return;
+            }
+
+            const images = imagesRaw ? imagesRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+            const videos = videosRaw ? videosRaw.split(',').map(s => s.trim()).filter(Boolean) : [];
+
+            // Блокируем кнопку
+            btn.disabled = true;
+            btn.textContent = '⏳ Публикую...';
+            showStatus('⏳ Отправляю данные на GitHub...', 'loading');
+
+            try {
+                // 1. Получаем текущий posts.json
+                const fileUrl = `https://api.github.com/repos/${REPO}/contents/posts.json`;
+                const fileRes = await fetch(fileUrl, {
+                    headers: { Authorization: `token ${token}` }
+                });
+
+                if (!fileRes.ok) {
+                    throw new Error('Не удалось получить posts.json. Проверьте токен.');
+                }
+
+                const fileData = await fileRes.json();
+                const currentPosts = JSON.parse(atob(fileData.content));
+
+                // 2. Создаём новый пост
+                const newId = Math.max(...currentPosts.map(p => p.id), 0) + 1;
+                const newPost = {
+                    id: newId,
+                    title: title,
+                    date: date,
+                    preview: preview || '',
+                    preview_text: preview_text || '',
+                    full_text: full_text,
+                    images: images,
+                    videos: videos
+                };
+
+                currentPosts.push(newPost);
+
+                // 3. Отправляем обновлённый файл обратно
+                const contentEncoded = btoa(unescape(encodeURIComponent(JSON.stringify(currentPosts, null, 2))));
+
+                const putRes = await fetch(fileUrl, {
+                    method: 'PUT',
+                    headers: {
+                        Authorization: `token ${token}`,
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        message: `Добавлен пост: ${title}`,
+                        content: contentEncoded,
+                        sha: fileData.sha
+                    })
+                });
+
+                if (!putRes.ok) {
+                    const err = await putRes.json();
+                    throw new Error(err.message || 'Ошибка при сохранении');
+                }
+
+                // Успех!
+                showStatus('✅ Опубликовано! Пост появится на сайте через 1–2 минуты.', 'success');
+                btn.textContent = '✅ Опубликовано';
+
+                // Очищаем форму
+                setTimeout(() => {
+                    document.getElementById('title').value = '';
+                    document.getElementById('date').value = '';
+                    document.getElementById('preview').value = '';
+                    document.getElementById('preview_text').value = '';
+                    document.getElementById('full_text').value = '';
+                    document.getElementById('images').value = '';
+                    document.getElementById('videos').value = '';
+                    btn.disabled = false;
+                    btn.textContent = '🚀 Опубликовать';
+                }, 3000);
+
+            } catch (error) {
+                console.error(error);
+                showStatus('❌ Ошибка: ' + error.message, 'error');
+                btn.disabled = false;
+                btn.textContent = '🚀 Опубликовать';
+            }
+        }
+
+        // ============================================
+        // ПОКАЗ СТАТУСА
+        // ============================================
+        function showStatus(text, type) {
+            const status = document.getElementById('status');
+            status.textContent = text;
+            status.className = type;
+        }
+
+        // ============================================
+        // КНОПКА ВЫХОДА (если токен неправильный)
+        // ============================================
+        window.addEventListener('keydown', (e) => {
+            // Ctrl + Shift + R — сброс токена
+            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
+                localStorage.removeItem(TOKEN_KEY);
+                alert('Токен удалён. Обновите страницу.');
+            }
+        });
+    </script>
+</body>
+</html>
