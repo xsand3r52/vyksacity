@@ -120,7 +120,7 @@
 <body>
 
     <div class="container" id="adminForm" style="display:none;">
-    <h1>📝 Новый пост</h1>
+        <h1>📝 Новый пост</h1>
         <p class="subtitle">Заполните форму и нажмите «Опубликовать». Пост появится на сайте через 1–2 минуты.</p>
 
         <label>Название поста</label>
@@ -157,49 +157,51 @@
         // ============================================
         // НАСТРОЙКИ
         // ============================================
-        const REPO = 'xsand3r52/vyksacity';  // Ваш репозиторий
-        const TOKEN_KEY = 'gh_token_vyksacity';  // Ключ для localStorage
+        const REPO = 'xsand3r52/vyksacity';
 
         // ============================================
-// ПРОВЕРКА ТОКЕНА
-// ============================================
-async function checkToken(token) {
-    try {
-        const res = await fetch(`https://api.github.com/repos/${REPO}`, {
-            headers: { Authorization: `token ${token}` }
-        });
-        return res.ok;
-    } catch (e) {
-        return false;
-    }
-}
+        // ПРОВЕРКА ТОКЕНА
+        // ============================================
+        async function checkToken(token) {
+            try {
+                const res = await fetch(`https://api.github.com/repos/${REPO}`, {
+                    headers: { Authorization: `token ${token}` }
+                });
+                return res.ok;
+            } catch (e) {
+                return false;
+            }
+        }
 
-async function initAdmin() {
-    // Всегда спрашиваем токен — не берём из localStorage
-    const token = prompt('🔑 Введите ваш GitHub токен:');
+        // ============================================
+        // ИНИЦИАЛИЗАЦИЯ АДМИНКИ
+        // ============================================
+        async function initAdmin() {
+            // Всегда спрашиваем токен — каждый раз
+            const token = prompt('🔑 Введите ваш GitHub токен:');
 
-    if (!token) {
-        alert('❌ Без токена вход невозможен.');
-        window.location.href = 'index.html';
-        return;
-    }
+            if (!token) {
+                alert('❌ Без токена вход невозможен.');
+                window.location.href = 'index.html';
+                return;
+            }
 
-    // Проверяем токен
-    const isValid = await checkToken(token);
+            // Проверяем токен
+            const isValid = await checkToken(token);
 
-    if (!isValid) {
-        alert('❌ Неверный токен. Попробуйте снова.');
-        window.location.href = 'index.html';
-        return;
-    }
+            if (!isValid) {
+                alert('❌ Неверный токен. Попробуйте снова.');
+                window.location.href = 'index.html';
+                return;
+            }
 
-    // Токен верный — сохраняем в переменную и показываем форму
-    window.githubToken = token;
-    document.getElementById('adminForm').style.display = 'block';
-    console.log('✅ Токен верный. Добро пожаловать!');
-}
+            // Токен верный — сохраняем в window и показываем форму
+            window.githubToken = token;
+            document.getElementById('adminForm').style.display = 'block';
+            console.log('✅ Токен верный. Добро пожаловать!');
+        }
 
-initAdmin();
+        initAdmin();
 
         // ============================================
         // ФУНКЦИЯ ПУБЛИКАЦИИ
@@ -235,7 +237,7 @@ initAdmin();
                 // 1. Получаем текущий posts.json
                 const fileUrl = `https://api.github.com/repos/${REPO}/contents/posts.json`;
                 const fileRes = await fetch(fileUrl, {
-                    headers: { Authorization: `token ${token}` }
+                    headers: { Authorization: `token ${window.githubToken}` }
                 });
 
                 if (!fileRes.ok) {
@@ -243,8 +245,8 @@ initAdmin();
                 }
 
                 const fileData = await fileRes.json();
-               const decoded = decodeURIComponent(escape(atob(fileData.content)));
-const currentPosts = JSON.parse(decoded);
+                const decoded = decodeURIComponent(escape(atob(fileData.content)));
+                const currentPosts = JSON.parse(decoded);
 
                 // 2. Создаём новый пост
                 const newId = Math.max(...currentPosts.map(p => p.id), 0) + 1;
@@ -267,7 +269,7 @@ const currentPosts = JSON.parse(decoded);
                 const putRes = await fetch(fileUrl, {
                     method: 'PUT',
                     headers: {
-                        Authorization: `token ${token}`,
+                        Authorization: `token ${window.githubToken}`,
                         'Content-Type': 'application/json'
                     },
                     body: JSON.stringify({
@@ -315,17 +317,6 @@ const currentPosts = JSON.parse(decoded);
             status.textContent = text;
             status.className = type;
         }
-
-        // ============================================
-        // КНОПКА ВЫХОДА (если токен неправильный)
-        // ============================================
-        window.addEventListener('keydown', (e) => {
-            // Ctrl + Shift + R — сброс токена
-            if (e.ctrlKey && e.shiftKey && e.key === 'R') {
-                localStorage.removeItem(TOKEN_KEY);
-                alert('Токен удалён. Обновите страницу.');
-            }
-        });
     </script>
 </body>
 </html>
