@@ -175,30 +175,26 @@ async function checkToken(token) {
 }
 
 async function initAdmin() {
-    let token = localStorage.getItem(TOKEN_KEY);
+    // Всегда спрашиваем токен — не берём из localStorage
+    const token = prompt('🔑 Введите ваш GitHub токен:');
 
-    // Если токена нет — спрашиваем
     if (!token) {
-        token = prompt('🔑 Введите ваш GitHub токен:');
-        if (!token) {
-            alert('❌ Без токена вход невозможен.');
-            window.location.href = 'index.html';
-            return;
-        }
+        alert('❌ Без токена вход невозможен.');
+        window.location.href = 'index.html';
+        return;
     }
 
     // Проверяем токен
     const isValid = await checkToken(token);
 
     if (!isValid) {
-        localStorage.removeItem(TOKEN_KEY);
         alert('❌ Неверный токен. Попробуйте снова.');
         window.location.href = 'index.html';
         return;
     }
 
-    // Токен верный — сохраняем и показываем форму
-    localStorage.setItem(TOKEN_KEY, token);
+    // Токен верный — сохраняем в переменную и показываем форму
+    window.githubToken = token;
     document.getElementById('adminForm').style.display = 'block';
     console.log('✅ Токен верный. Добро пожаловать!');
 }
