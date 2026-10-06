@@ -161,19 +161,49 @@
         const TOKEN_KEY = 'gh_token_vyksacity';  // Ключ для localStorage
 
         // ============================================
-        // ПОЛУЧАЕМ ТОКЕН
-        // ============================================
-        let token = localStorage.getItem(TOKEN_KEY);
+// ПРОВЕРКА ТОКЕНА
+// ============================================
+async function checkToken(token) {
+    try {
+        const res = await fetch(`https://api.github.com/repos/${REPO}`, {
+            headers: { Authorization: `token ${token}` }
+        });
+        return res.ok;
+    } catch (e) {
+        return false;
+    }
+}
 
+async function initAdmin() {
+    let token = localStorage.getItem(TOKEN_KEY);
+
+    // Если токена нет — спрашиваем
+    if (!token) {
+        token = prompt('🔑 Введите ваш GitHub токен:');
         if (!token) {
-            token = prompt('🔑 Введите ваш GitHub токен (один раз):');
-            if (token) {
-                localStorage.setItem(TOKEN_KEY, token);
-            } else {
-                alert('❌ Без токена публикация невозможна.');
-                window.location.href = 'index.html';
-            }
+            alert('❌ Без токена вход невозможен.');
+            window.location.href = 'index.html';
+            return;
         }
+    }
+
+    // Проверяем токен
+    const isValid = await checkToken(token);
+
+    if (!isValid) {
+        localStorage.removeItem(TOKEN_KEY);
+        alert('❌ Неверный токен. Попробуйте снова.');
+        window.location.href = 'index.html';
+        return;
+    }
+
+    // Токен верный — сохраняем и показываем форму
+    localStorage.setItem(TOKEN_KEY, token);
+    document.getElementById('adminForm').style.display = 'block';
+    console.log('✅ Токен верный. Добро пожаловать!');
+}
+
+initAdmin();
 
         // ============================================
         // ФУНКЦИЯ ПУБЛИКАЦИИ
