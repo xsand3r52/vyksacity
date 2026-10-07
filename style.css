@@ -362,3 +362,93 @@ footer {
     transform: translateY(-2px);
     box-shadow: 0 4px 12px rgba(0, 119, 255, 0.3);
 }
+/* ===== КНОПКА-ГАМБУРГЕР ===== */
+.menu-toggle {
+    display: none;                /* скрыта на ПК */
+    flex-direction: column;
+    justify-content: space-between;
+    width: 32px;
+    height: 24px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+    z-index: 1100;
+}
+
+.menu-toggle span {
+    display: block;
+    width: 100%;
+    height: 3px;
+    background: #c62828;
+    border-radius: 3px;
+    transition: 0.3s;
+}
+
+/* Анимация при открытии */
+.menu-toggle.active span:nth-child(1) {
+    transform: translateY(10.5px) rotate(45deg);
+}
+.menu-toggle.active span:nth-child(2) {
+    opacity: 0;
+}
+.menu-toggle.active span:nth-child(3) {
+    transform: translateY(-10.5px) rotate(-45deg);
+}
+
+/* ===== МОБИЛЬНАЯ ВЕРСИЯ (до 900px) ===== */
+@media (max-width: 900px) {
+    /* Показываем гамбургер */
+    .menu-toggle {
+        display: flex;
+    }
+    
+    /* Меню скрыто по умолчанию */
+    #main-nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: #ffffff;
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0;
+        padding: 0;
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        border-bottom: 3px solid #c62828;
+        z-index: 1000;
+    }
+    
+    /* Меню открыто */
+    #main-nav.open {
+        max-height: 500px;
+        padding: 10px 0;
+    }
+    
+    #main-nav a {
+        padding: 14px 20px;
+        border-radius: 0;
+        border-bottom: 1px solid #f0e8e8;
+        text-align: left;
+    }
+    
+    #main-nav a:hover,
+    #main-nav a.active {
+        background: #c62828;
+        color: #ffffff;
+    }
+    
+    .header-flex {
+        position: relative;
+        flex-direction: row;       /* не column — чтобы гамбургер был слева */
+        align-items: center;
+        justify-content: space-between;
+    }
+    
+    .logo {
+        flex: 1;
+    }
+}
