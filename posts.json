@@ -164,5 +164,15 @@
       "images/post10_4.jpg"
     ],
     "videos": []
+  },
+  {
+    "id": 11,
+    "title": "Гонка",
+    "date": "2026-10-07",
+    "preview": "",
+    "preview_text": "Сюда блин",
+    "full_text": "Хиросима",
+    "images": [],
+    "videos": []
   }
 ]
