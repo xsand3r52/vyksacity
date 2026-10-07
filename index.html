@@ -53,5 +53,13 @@
 
     <!-- ====== ПОДКЛЮЧАЕМ JS ====== -->
     <script src="script.js"></script>
+    <script>
+    function toggleMenu() {
+        const nav = document.getElementById('main-nav');
+        const btn = document.querySelector('.menu-toggle');
+        nav.classList.toggle('open');
+        btn.classList.toggle('active');
+    }
+</script>
 </body>
 </html>
