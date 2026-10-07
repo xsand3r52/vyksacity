@@ -451,4 +451,23 @@ footer {
     .logo {
         flex: 1;
     }
+ }
+/* ===== КНОПКА "НОВЫЙ ПОСТ" ===== */
+.admin-btn {
+    display: inline-block;
+    background: #c62828;
+    color: #ffffff !important;
+    padding: 6px 12px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    transition: 0.3s;
+    border: none;
+}
+
+.admin-btn:hover {
+    background: #8e0000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(198, 40, 40, 0.3);
 }
